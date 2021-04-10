@@ -31,30 +31,6 @@ function setCache(key, value)
     cache[key] = value
 end
 
-
-function updateImeLaunched(appname, eventtype, appobj)
-    -- local front_appname = hs.window.frontmostWindow():application():name()
-    if appname2ime[appname] ~= nil then
-        setIme(appname2ime[appname])
-        cache[appname] = appname2ime[appname]
-        print(appname .. ' -> ' .. appname2ime[appname])
-    end
-end
-
-function updateImeActivated(appname, eventtype, appobj)
-    if cache[appname] ~= nil then
-        setIme(cache[appname])
-    end
-end
-
-function updateImeDeactivated(appname, eventtype, appobj)
-    setCache(appname, last_ime)
-end
-
-function updateImeTerminated(appname, eventtype, appobj)
-    setCache(appname, nil)
-end
-
 -- 按下Ctrl+Command+.时会显示当前应用的路径、名称和当前输入法
 hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
     hs.alert.show("App path:        " .. hs.window.focusedWindow():application():path() .. "\n"
@@ -69,15 +45,21 @@ end)
 
 appWatcher = hs.application.watcher.new(function (appname, eventtype, appobj)
     if eventtype == hs.application.watcher.launched then
-        updateImeLaunched(appname, eventtype, appobj)
+        if appname2ime[appname] ~= nil then
+            setIme(appname2ime[appname])
+            cache[appname] = appname2ime[appname]
+            print(appname .. ' -> ' .. appname2ime[appname])
+        end
     elseif eventtype == hs.application.watcher.activated then
         print("ACTIVATED : " .. appname .. " @" .. os.clock())
-        updateImeActivated(appname, eventtype, appobj)
+        if cache[appname] ~= nil then
+            setIme(cache[appname])
+        end
     elseif eventtype == hs.application.watcher.deactivated then
         print("DEACTIVATED : " .. appname .. " @" .. os.clock())
-        updateImeDeactivated(appname, eventtype, appobj)
+        setCache(appname, last_ime)
     elseif eventtype == hs.application.watcher.terminated then
-        updateImeTerminated(appname, eventtype, appobj)
+        setCache(appname, nil)
     end
 end)
 appWatcher:start()
