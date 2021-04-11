@@ -1,3 +1,5 @@
+require "clipboard.clipboard"
+
 last_ime = 'Chinese'
 
 local function setIme(ime)
