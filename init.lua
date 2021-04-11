@@ -18,7 +18,14 @@ end
 local appname2ime = {}
 appname2ime['Visual Studio Code'] = 'English'
 appname2ime['Sublime Text'] = 'English'
+appname2ime['iTerm2'] = 'English'
+appname2ime['Terminal'] = 'English'
+
 appname2ime['Finder'] = 'Chinese'
+appname2ime['WeChat'] = 'Chinese'
+appname2ime['QQ'] = 'Chinese'
+appname2ime['Microsoft OneNote'] = 'Chinese'
+
 
 local cache = {}
 
