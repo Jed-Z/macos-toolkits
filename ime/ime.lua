@@ -15,24 +15,24 @@ local function setIme(ime)
     end
 end
 
-local appname2ime = {}
-appname2ime['Code'] = 'English'
-appname2ime['Sublime Text'] = 'English'
-appname2ime['iTerm2'] = 'English'
-appname2ime['Terminal'] = 'English'
+local preset = {}
+preset['Code'] = 'English'
+preset['Sublime Text'] = 'English'
+preset['iTerm2'] = 'English'
+preset['Terminal'] = 'English'
 
-appname2ime['Finder'] = 'Chinese'
-appname2ime['WeChat'] = 'Chinese'
-appname2ime['QQ'] = 'Chinese'
-appname2ime['Microsoft OneNote'] = 'Chinese'
+preset['Finder'] = 'Chinese'
+preset['WeChat'] = 'Chinese'
+preset['QQ'] = 'Chinese'
+preset['Microsoft OneNote'] = 'Chinese'
 
 local cache = {}
 
 function doAppLaunched(appname)
-    if appname2ime[appname] ~= nil then
-        setIme(appname2ime[appname])
-        cache[appname] = appname2ime[appname]
-        print(appname .. ' -> ' .. appname2ime[appname])
+    if preset[appname] ~= nil then
+        setIme(preset[appname])
+        cache[appname] = preset[appname]
+        print(appname .. ' -> ' .. preset[appname])
     end
 end
 
@@ -40,9 +40,9 @@ function doAppActivated(appname)
     if cache[appname] ~= nil then
         setIme(cache[appname])
         print("'" .. appname .. "' activated, switching to " .. cache[appname])
-    elseif appname2ime[appname] ~= nil then
-        setIme(appname2ime[appname])
-        print("'" .. appname .. "' activated (cache miss), switching to " .. appname2ime[appname])
+    elseif preset[appname] ~= nil then
+        setIme(preset[appname])
+        print("'" .. appname .. "' activated (cache miss), switching to " .. preset[appname])
     else
         print("'" .. appname .. "' activated, doing nothing")
     end
