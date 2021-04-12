@@ -16,7 +16,7 @@ local function setIme(ime)
 end
 
 local appname2ime = {}
-appname2ime['Visual Studio Code'] = 'English'
+appname2ime['Code'] = 'English'
 appname2ime['Sublime Text'] = 'English'
 appname2ime['iTerm2'] = 'English'
 appname2ime['Terminal'] = 'English'
