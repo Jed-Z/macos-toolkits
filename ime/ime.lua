@@ -1,4 +1,4 @@
-last_ime = 'Chinese'
+local last_ime = 'Chinese'
 
 local function setIme(ime)
     local current_ime = hs.keycodes.currentSourceID()
@@ -26,7 +26,6 @@ appname2ime['WeChat'] = 'Chinese'
 appname2ime['QQ'] = 'Chinese'
 appname2ime['Microsoft OneNote'] = 'Chinese'
 
-
 local cache = {}
 
 function setCache(key, value)
@@ -36,6 +35,30 @@ function setCache(key, value)
         print("SET cache[" .. key .. "]=nil")
     end
     cache[key] = value
+end
+
+function doAppLaunched(appname)
+    if appname2ime[appname] ~= nil then
+        setIme(appname2ime[appname])
+        cache[appname] = appname2ime[appname]
+        print(appname .. ' -> ' .. appname2ime[appname])
+    end
+end
+
+function doAppActivated(appname)
+    print("ACTIVATED : " .. appname .. " @" .. os.clock())
+    if cache[appname] ~= nil then
+        setIme(cache[appname])
+    end
+end
+
+function doAppDeactivated(appname)
+    print("DEACTIVATED : " .. appname .. " @" .. os.clock())
+    setCache(appname, last_ime)
+end
+
+function doAppTerminated(appname)
+    setCache(appname, nil)
 end
 
 -- 按下Ctrl+Command+.时会显示当前应用的路径、名称和当前输入法
@@ -52,21 +75,13 @@ end)
 
 appWatcher = hs.application.watcher.new(function (appname, eventtype, appobj)
     if eventtype == hs.application.watcher.launched then
-        if appname2ime[appname] ~= nil then
-            setIme(appname2ime[appname])
-            cache[appname] = appname2ime[appname]
-            print(appname .. ' -> ' .. appname2ime[appname])
-        end
+        doAppLaunched(appname)
     elseif eventtype == hs.application.watcher.activated then
-        print("ACTIVATED : " .. appname .. " @" .. os.clock())
-        if cache[appname] ~= nil then
-            setIme(cache[appname])
-        end
+        doAppActivated(appname)
     elseif eventtype == hs.application.watcher.deactivated then
-        print("DEACTIVATED : " .. appname .. " @" .. os.clock())
-        setCache(appname, last_ime)
+        doAppDeactivated(appname)
     elseif eventtype == hs.application.watcher.terminated then
-        setCache(appname, nil)
+        doAppTerminated(appname)
     end
 end)
 appWatcher:start()
