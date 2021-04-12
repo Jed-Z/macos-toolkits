@@ -28,15 +28,6 @@ appname2ime['Microsoft OneNote'] = 'Chinese'
 
 local cache = {}
 
-function setCache(key, value)
-    if value ~= nil then
-        print("SET cache[" .. key .. "]=" .. value)
-    else
-        print("SET cache[" .. key .. "]=nil")
-    end
-    cache[key] = value
-end
-
 function doAppLaunched(appname)
     if appname2ime[appname] ~= nil then
         setIme(appname2ime[appname])
@@ -46,34 +37,40 @@ function doAppLaunched(appname)
 end
 
 function doAppActivated(appname)
-    print("ACTIVATED : " .. appname .. " @" .. os.clock())
     if cache[appname] ~= nil then
         setIme(cache[appname])
+        print("'" .. appname .. "' activated, switching to " .. cache[appname])
+    elseif appname2ime[appname] ~= nil then
+        setIme(appname2ime[appname])
+        print("'" .. appname .. "' activated (cache miss), switching to " .. appname2ime[appname])
+    else
+        print("'" .. appname .. "' activated, doing nothing")
     end
 end
 
 function doAppDeactivated(appname)
-    print("DEACTIVATED : " .. appname .. " @" .. os.clock())
-    setCache(appname, last_ime)
+    cache[appname] = last_ime
+    print("'" .. appname .. "' deactivated")
 end
 
 function doAppTerminated(appname)
-    setCache(appname, nil)
+    cache[appname] = nil
+    print("'" .. appname .. "' terminated, " ..  "removing cache['" .. appname .. "']")
 end
 
 -- 按下Ctrl+Command+.时会显示当前应用的路径、名称和当前输入法
 hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
     hs.alert.show("App path:        " .. hs.window.focusedWindow():application():path() .. "\n"
-    .. "App name:      " .. hs.window.focusedWindow():application():name() .. "\n"
-    .. "IM source id:  " .. hs.keycodes.currentSourceID())
+        .. "App name:      " .. hs.window.focusedWindow():application():name() .. "\n"
+        .. "IM source id:  " .. hs.keycodes.currentSourceID())
     print("----------")
     for k, v in pairs(cache) do
-        print("cache[" .. k .. "] = " .. v)
+        print("cache['" .. k .. "'] = " .. v)
     end
     print("----------")
 end)
 
-appWatcher = hs.application.watcher.new(function (appname, eventtype, appobj)
+hs.application.watcher.new(function (appname, eventtype, appobj)
     if eventtype == hs.application.watcher.launched then
         doAppLaunched(appname)
     elseif eventtype == hs.application.watcher.activated then
@@ -83,7 +80,5 @@ appWatcher = hs.application.watcher.new(function (appname, eventtype, appobj)
     elseif eventtype == hs.application.watcher.terminated then
         doAppTerminated(appname)
     end
-end)
-appWatcher:start()
-
-print('\n')
+end):start()
+print('======= RESTARTING =======')
