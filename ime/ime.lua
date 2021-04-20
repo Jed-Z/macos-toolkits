@@ -50,7 +50,7 @@ end
 
 function doAppDeactivated(appname)
     cache[appname] = last_ime
-    print("'" .. appname .. "' deactivated")
+    print("'" .. appname .. "' deactivated, " .. "setting cache['" .. appname .. "'] = " .. last_ime)
 end
 
 function doAppTerminated(appname)
