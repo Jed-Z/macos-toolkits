@@ -171,7 +171,7 @@ end
 timer = hs.timer.new(frequency, storeCopy)
 timer:start()
 
-setTitle() --Avoid wrong title if the user already has something on his saved history
+-- setTitle() --Avoid wrong title if the user already has something on his saved history
 jumpcut:setMenu(populateMenu)
 
 hs.hotkey.bind({"cmd", "shift"}, "v", function() jumpcut:popupMenu(hs.mouse.getAbsolutePosition()) end)
