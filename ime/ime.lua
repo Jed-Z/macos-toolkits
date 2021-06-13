@@ -1,22 +1,28 @@
 local last_ime = 'Chinese'
 
+local lang2sourceid = {}
+lang2sourceid['English'] = 'com.apple.keylayout.ABC'
+lang2sourceid['Chinese'] = 'com.apple.inputmethod.SCIM.ITABC'
+-- lang2sourceid['Chinese'] = 'im.rime.inputmethod.Squirrel.Rime'
+
 local function setIme(ime)
     local current_ime = hs.keycodes.currentSourceID()
-    if current_ime == 'com.apple.keylayout.ABC' then
+    if current_ime == lang2sourceid['English'] then
         last_ime = 'English'
-    elseif current_ime == 'im.rime.inputmethod.Squirrel.Rime' then
+    elseif current_ime == lang2sourceid['Chinese'] then
         last_ime = 'Chinese'
     end
 
     if ime == 'English' then
-        hs.keycodes.currentSourceID('com.apple.keylayout.ABC')
+        hs.keycodes.currentSourceID(lang2sourceid['English'])
     elseif ime == 'Chinese' then
         -- hs.keycodes.currentSourceID('im.rime.inputmethod.Squirrel.Rime')
-        hs.keycodes.currentSourceID('com.apple.inputmethod.SCIM.ITABC')
+        hs.keycodes.currentSourceID(lang2sourceid['Chinese'])
     end
 end
 
 local preset = {}
+preset['Spotlight'] = 'English'
 preset['Code'] = 'English'
 preset['Sublime Text'] = 'English'
 preset['iTerm2'] = 'English'
@@ -70,7 +76,13 @@ hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
     print("----------")
 end)
 
+hs.window.filter.new('Spotlight')
+:subscribe(hs.window.filter.hasWindow, function()
+             doAppActivated('Spotlight')
+          end)
+
 hs.application.watcher.new(function (appname, eventtype, appobj)
+    print(appname)
     if eventtype == hs.application.watcher.launched then
         doAppLaunched(appname)
     elseif eventtype == hs.application.watcher.activated then
