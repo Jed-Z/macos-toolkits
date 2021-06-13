@@ -11,7 +11,8 @@ local function setIme(ime)
     if ime == 'English' then
         hs.keycodes.currentSourceID('com.apple.keylayout.ABC')
     elseif ime == 'Chinese' then
-        hs.keycodes.currentSourceID('im.rime.inputmethod.Squirrel.Rime')
+        -- hs.keycodes.currentSourceID('im.rime.inputmethod.Squirrel.Rime')
+        hs.keycodes.currentSourceID('com.apple.inputmethod.SCIM.ITABC')
     end
 end
 
@@ -20,7 +21,6 @@ preset['Code'] = 'English'
 preset['Sublime Text'] = 'English'
 preset['iTerm2'] = 'English'
 preset['Terminal'] = 'English'
-
 preset['Finder'] = 'Chinese'
 preset['WeChat'] = 'Chinese'
 preset['QQ'] = 'Chinese'
