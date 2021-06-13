@@ -1,5 +1,3 @@
-require("hs.timer")
-
 local last_ime = 'Chinese'  -- default IME
 
 local lang2sourceid = {
@@ -14,10 +12,14 @@ local preset = {
     ['Sublime Text'] = 'English',
     ['iTerm2'] = 'English',
     ['Terminal'] = 'English',
+
     ['Finder'] = 'Chinese',
     ['WeChat'] = 'Chinese',
     ['QQ'] = 'Chinese',
     ['Microsoft OneNote'] = 'Chinese',
+
+    ['loginwindow'] = false,
+    ['ScreenSaverEngine'] = false
 }
 
 local cache = {}
@@ -29,7 +31,6 @@ local function setIme(ime)
     elseif current_ime == lang2sourceid['Chinese'] then
         last_ime = 'Chinese'
     end
-
     if ime == 'English' then
         hs.keycodes.currentSourceID(lang2sourceid['English'])
     elseif ime == 'Chinese' then
@@ -38,7 +39,7 @@ local function setIme(ime)
 end
 
 function doAppLaunched(appname)
-    if preset[appname] ~= nil then
+    if preset[appname] then
         setIme(preset[appname])
         cache[appname] = preset[appname]
         print(appname .. ' -> ' .. preset[appname])
@@ -46,10 +47,10 @@ function doAppLaunched(appname)
 end
 
 function doAppActivated(appname)
-    if cache[appname] ~= nil then
+    if cache[appname] then
         setIme(cache[appname])
         print("'" .. appname .. "' activated, switching to " .. cache[appname])
-    elseif preset[appname] ~= nil then
+    elseif preset[appname] then
         setIme(preset[appname])
         print("'" .. appname .. "' activated (cache miss), switching to " .. preset[appname])
     else
@@ -79,12 +80,23 @@ hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
     print("----------")
 end)
 
-hs.window.filter.new('Spotlight')
-    :subscribe(hs.window.filter.hasWindow, function()
-        doAppActivated('Spotlight')
-    end)
+local before_spolight
+hs.window.filter.new('Spotlight'):subscribe(
+    {
+        [hs.window.filter.hasWindow] = function()
+            before_spolight = hs.keycodes.currentSourceID()
+            hs.keycodes.currentSourceID(lang2sourceid[preset['Spotlight']])
+            print("'Spotlight' activated, switching to " .. preset['Spotlight'])
+        end,
+        [hs.window.filter.hasNoWindows] = function()
+            hs.keycodes.currentSourceID(before_spolight)
+            print("'Spotlight' deactivated, reverting to " .. before_spolight)
+        end
+    }
+)
 
 hs.application.watcher.new(function (appname, eventtype, appobj)
+    print("app watcher: "..appname.." "..eventtype)
     if eventtype == hs.application.watcher.launched then
         doAppLaunched(appname)
     elseif eventtype == hs.application.watcher.activated then
