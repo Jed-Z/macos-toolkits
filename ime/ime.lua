@@ -95,7 +95,7 @@ hs.window.filter.new('Spotlight'):subscribe(
     }
 )
 
-hs.application.watcher.new(function (appname, eventtype, appobj)
+app_watcher = hs.application.watcher.new(function (appname, eventtype, appobj)
     print("app watcher: "..appname.." "..eventtype)
     if eventtype == hs.application.watcher.launched then
         doAppLaunched(appname)
@@ -106,7 +106,8 @@ hs.application.watcher.new(function (appname, eventtype, appobj)
     elseif eventtype == hs.application.watcher.terminated then
         doAppTerminated(appname)
     end
-end):start()
+end)
+app_watcher:start()
 print('======= RESTARTING =======')
 
 hs.caffeinate.watcher.new(function (eventtype)
