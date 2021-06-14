@@ -109,8 +109,8 @@ hs.application.watcher.new(function (appname, eventtype, appobj)
 end):start()
 print('======= RESTARTING =======')
 
--- hs.caffeinate.watcher.new(function (eventtype)
---     if eventtype == hs.caffeinate.watcher.systemDidWake
---         hs.reload()
---     end
--- end):start()
+hs.caffeinate.watcher.new(function (eventtype)
+    if eventtype == hs.caffeinate.watcher.systemDidWake then
+        hs.reload()
+    end
+end):start()
