@@ -24,6 +24,14 @@ local preset = {
 
 local cache = {}
 
+function printCache()
+    print("----------")
+    for k, v in pairs(cache) do
+        print("cache['" .. k .. "'] = " .. v)
+    end
+    print("----------")
+end
+
 local function setIme(ime)
     local current_ime = hs.keycodes.currentSourceID()
     if current_ime == lang2sourceid['English'] then
@@ -68,18 +76,6 @@ function doAppTerminated(appname)
     print("'" .. appname .. "' terminated, " ..  "removing cache['" .. appname .. "']")
 end
 
--- 按下Ctrl+Command+.时会显示当前应用的路径、名称和当前输入法
-hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
-    hs.alert.show("App path:        " .. hs.window.focusedWindow():application():path() .. "\n"
-        .. "App name:      " .. hs.window.focusedWindow():application():name() .. "\n"
-        .. "IM source id:  " .. hs.keycodes.currentSourceID())
-    print("----------")
-    for k, v in pairs(cache) do
-        print("cache['" .. k .. "'] = " .. v)
-    end
-    print("----------")
-end)
-
 local before_spolight
 hs.window.filter.new('Spotlight'):subscribe(
     {
@@ -109,9 +105,18 @@ app_watcher = hs.application.watcher.new(function (appname, eventtype, appobj)
 end)
 app_watcher:start()
 print('======= RESTARTING =======')
+hs.alert.show(
+    "App path:        " .. hs.window.focusedWindow():application():path() .. "\n"
+    .. "App name:      " .. hs.window.focusedWindow():application():name() .. "\n"
+    .. "IM source id:  " .. hs.keycodes.currentSourceID()
+)
 
 hs.caffeinate.watcher.new(function (eventtype)
     if eventtype == hs.caffeinate.watcher.systemDidWake then
         hs.reload()
     end
 end):start()
+
+hs.hotkey.bind({'ctrl', 'cmd'}, ".", function()
+    hs.reload()
+end)
