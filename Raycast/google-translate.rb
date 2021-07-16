@@ -3,7 +3,7 @@
 # Required parameters:
 # @raycast.schemaVersion 1
 # @raycast.title Google Translate
-# @raycast.mode compact
+# @raycast.mode fullOutput
 # @raycast.packageName Web Searches
 
 # Optional parameters:
