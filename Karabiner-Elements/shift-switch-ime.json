@@ -1,0 +1,69 @@
+{
+    "title": "Change shift to previous input source",
+    "rules": [
+        {
+            "description": "Change shift to previous input source if pressed alone",
+            "manipulators": [
+                {
+                    "from": {
+                        "key_code": "left_shift"
+                    },
+                    "parameters": {
+                        "basic.to_if_held_down_threshold_milliseconds": 200
+                    },
+                    "to": [
+                        {
+                            "key_code": "left_shift",
+                            "lazy": true
+                        }
+                    ],
+                    "to_if_alone": [
+                        {
+                            "halt": true,
+                            "key_code": "spacebar",
+                            "modifiers": [
+                                "left_control"
+                            ]
+                        }
+                    ],
+                    "to_if_held_down": [
+                        {
+                            "halt": true,
+                            "key_code": "left_shift"
+                        }
+                    ],
+                    "type": "basic"
+                },
+                {
+                    "from": {
+                        "key_code": "right_shift"
+                    },
+                    "parameters": {
+                        "basic.to_if_held_down_threshold_milliseconds": 200
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_shift",
+                            "lazy": true
+                        }
+                    ],
+                    "to_if_alone": [
+                        {
+                            "key_code": "spacebar",
+                            "modifiers": [
+                                "left_control"
+                            ]
+                        }
+                    ],
+                    "to_if_held_down": [
+                        {
+                            "halt": true,
+                            "key_code": "left_shift"
+                        }
+                    ],
+                    "type": "basic"
+                }
+            ]
+        }
+    ]
+}
