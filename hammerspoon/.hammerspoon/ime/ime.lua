@@ -7,11 +7,12 @@ local lang2sourceid = {
 }
 
 local preset = {
-    ['Spotlight'] = 'English',
     ['Code'] = 'English',
     ['Sublime Text'] = 'English',
     ['iTerm2'] = 'English',
     ['Terminal'] = 'English',
+    ['Spotlight'] = 'English',
+    ['Raycast'] = 'English',
 
     ['Finder'] = 'Chinese',
     ['WeChat'] = 'Chinese',
@@ -76,6 +77,7 @@ function doAppTerminated(appname)
     print("'" .. appname .. "' terminated, " ..  "removing cache['" .. appname .. "']")
 end
 
+-- Spotlight
 local before_spolight
 hs.window.filter.new('Spotlight'):subscribe(
     {
@@ -87,6 +89,22 @@ hs.window.filter.new('Spotlight'):subscribe(
         [hs.window.filter.hasNoWindows] = function()
             hs.keycodes.currentSourceID(before_spolight)
             print("'Spotlight' deactivated, reverting to " .. before_spolight)
+        end
+    }
+)
+
+-- Raycast
+local before_raycast
+hs.window.filter.new('Raycast'):subscribe(
+    {
+        [hs.window.filter.hasWindow] = function()
+            before_raycast = hs.keycodes.currentSourceID()
+            hs.keycodes.currentSourceID(lang2sourceid[preset['Raycast']])
+            print("'Raycast' activated, switching to " .. preset['Raycast'])
+        end,
+        [hs.window.filter.hasNoWindows] = function()
+            hs.keycodes.currentSourceID(before_raycast)
+            print("'Raycast' deactivated, reverting to " .. before_raycast)
         end
     }
 )
