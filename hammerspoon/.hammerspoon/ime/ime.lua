@@ -15,9 +15,11 @@ local preset = {
     ['Raycast'] = 'English',
 
     ['Finder'] = 'Chinese',
+    ['Notes'] = 'Chinese',
     ['WeChat'] = 'Chinese',
     ['QQ'] = 'Chinese',
     ['Microsoft OneNote'] = 'Chinese',
+    ['PDF Expert'] = 'Chinese',
 
     ['loginwindow'] = false,
     ['ScreenSaverEngine'] = false
