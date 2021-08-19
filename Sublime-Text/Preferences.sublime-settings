@@ -1,8 +1,12 @@
 // Settings in here override those in "Default/Preferences.sublime-settings",
 // and are overridden in turn by syntax-specific settings.
 {
+	"update_check": false,
 	"color_scheme": "Monokai.sublime-color-scheme",
+	"font_size": 13,
 	"file_tab_style": "angled",
 	"caret_style": "smooth",
-	"update_check": false,
+	"caret_extra_top": 2,
+	"caret_extra_bottom": 2,
+	"caret_extra_width": 1,
 }
