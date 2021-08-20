@@ -13,6 +13,7 @@ local preset = {
     ['Terminal'] = 'English',
     ['Spotlight'] = 'English',
     ['Raycast'] = 'English',
+    ['Eudic LightPeek'] = 'English',
 
     ['Finder'] = 'Chinese',
     ['Notes'] = 'Chinese',
