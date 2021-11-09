@@ -96,22 +96,6 @@ hs.window.filter.new('Spotlight'):subscribe(
     }
 )
 
--- Raycast
--- local before_raycast
--- hs.window.filter.new('Raycast'):subscribe(
---     {
---         [hs.window.filter.hasWindow] = function()
---             before_raycast = hs.keycodes.currentSourceID()
---             hs.keycodes.currentSourceID(lang2sourceid[preset['Raycast']])
---             print("'Raycast' activated, switching to " .. preset['Raycast'])
---         end,
---         [hs.window.filter.hasNoWindows] = function()
---             hs.keycodes.currentSourceID(before_raycast)
---             print("'Raycast' deactivated, reverting to " .. before_raycast)
---         end
---     }
--- )
-
 app_watcher = hs.application.watcher.new(function (appname, eventtype, appobj)
     print("app watcher: "..appname.." "..eventtype)
     if eventtype == hs.application.watcher.launched then
